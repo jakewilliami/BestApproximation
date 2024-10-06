@@ -21,13 +21,16 @@ Given an integer ``R_{\text{max}}`` it will assume the range between ``R = \left
 function best_approx(n::Number, R::AbstractRange)
     n, res = big(n), (0, 0)
     for i in R
-        j = round(Integer, log(i, n))
+        isone(i) && continue
+        m = log(i, n)
+        isinf(m) && continue
+        j = round(Integer, m)
         difference = (n - big(i)^(j))
         if (difference > 0) && (difference < (n - big(first(res))^(last(res))))
             res = (i, j)
         end
     end
-    
+
     return res
 end
 best_approx(n::Number, R_max::Integer) = best_approx(n, 1:R_max)
@@ -60,7 +63,7 @@ function best_approx(n::Number, I::AbstractRange, J::AbstractRange)
             res = (i, j)
         end
     end
-    
+
     return res
 end
 best_approx(n::Number, I_max::Integer, J_max::Integer) = best_approx(n, 1:I_max, 1:J_max)
